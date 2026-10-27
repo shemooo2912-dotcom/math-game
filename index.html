@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>تحدي جدول الضرب - الصف السادس</title>
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+:root{--ink:#2b2350;--pink:#ff5fa2;--purple:#7b5cff;--yellow:#ffd23f;--mint:#3ddc97;--blue:#3aa8ff;--orange:#ff8a3d}
+body{margin:0;font-family:Cairo,sans-serif;color:var(--ink);min-height:100vh;
+  background:linear-gradient(135deg,#ffe3f1 0%,#e4efff 50%,#fff4cf 100%);background-attachment:fixed}
+header{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:12px;padding:14px 20px;
+  background:linear-gradient(90deg,var(--purple),var(--pink));color:#fff;box-shadow:0 6px 20px rgba(123,92,255,.3)}
+.brand{font-family:'Baloo 2',Cairo,sans-serif;font-size:26px;font-weight:800}
+.deco{font-size:22px;animation:bob 2.4s ease-in-out infinite}
+.deco:nth-child(3){animation-delay:.4s}.deco:nth-child(4){animation-delay:.8s}
+main{max-width:920px;margin:0 auto;padding:24px 16px 60px}
+.screen{display:none}.screen.active{display:block;animation:pop .45s ease}
+.card{background:#fff;border-radius:26px;padding:24px;box-shadow:0 14px 30px rgba(43,35,80,.12);margin-bottom:18px}
+h1,h2{font-family:'Baloo 2',Cairo,sans-serif;margin:0 0 8px}
+h1{font-size:34px}h2{font-size:26px}
+.muted{color:#6b6490;margin:0}
+.hero{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.mascot{width:150px;height:auto;animation:float 3s ease-in-out infinite;flex-shrink:0}
+.levels{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:18px}
+.lv{border-radius:20px;padding:16px;color:#fff;font-weight:700;box-shadow:0 8px 18px rgba(0,0,0,.12)}
+.lv small{display:block;font-weight:400;opacity:.95;margin-top:6px;font-size:15px}
+.lv .big{font-family:'Baloo 2',sans-serif;font-size:22px}
+input[type=text]{width:100%;font:inherit;font-size:20px;padding:14px 18px;border-radius:16px;border:3px solid #d8d0ff;outline:none;margin-top:8px}
+input[type=text]:focus{border-color:var(--pink)}
+.form-row{margin-top:16px}
+.btn{font-family:inherit;font-size:20px;font-weight:900;border:0;border-radius:18px;padding:14px 26px;cursor:pointer;color:#fff;
+  background:linear-gradient(90deg,var(--orange),var(--pink));box-shadow:0 8px 0 #c94f7f;transition:transform .08s}
+.btn:active{transform:translateY(5px);box-shadow:0 3px 0 #c94f7f}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.msg{min-height:26px;margin-top:12px;font-weight:700;color:var(--pink);text-align:center}
+.topbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px}
+.bar{height:16px;background:#ece8ff;border-radius:999px;overflow:hidden;margin-bottom:18px}
+.bar div{height:100%;width:0;background:linear-gradient(90deg,var(--mint),var(--blue));border-radius:999px;transition:width .4s}
+.qtext{font-family:'Baloo 2',sans-serif;font-size:clamp(40px,8vw,64px);font-weight:800;text-align:center;margin:10px 0;direction:ltr}
+.vis{display:flex;flex-direction:column;align-items:center;gap:4px;margin:8px auto 14px;min-height:10px}
+.vis .row{display:flex;gap:4px;flex-wrap:wrap;justify-content:center}
+.dot{font-size:22px;animation:pop .4s ease both}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:10px}
+.opt{font-family:'Baloo 2',sans-serif;font-size:38px;font-weight:800;color:#fff;border:0;border-radius:22px;padding:20px 10px;cursor:pointer;
+  box-shadow:0 8px 0 rgba(0,0,0,.18);transition:transform .1s, opacity .3s}
+.opt:not(:disabled):hover{transform:translateY(-3px) scale(1.02)}
+.opt:disabled{cursor:default;opacity:.55}
+.opt.right{opacity:1;outline:6px solid #fff;box-shadow:0 0 0 6px var(--mint),0 8px 0 rgba(0,0,0,.18);animation:wiggle .5s}
+.opt.wrong{opacity:1;background:#9aa0b8 !important;box-shadow:0 0 0 6px var(--pink)}
+.fb{text-align:center;font-size:22px;font-weight:900;min-height:34px;margin-top:14px}
+.sync{text-align:center;font-size:14px;color:#6b6490;margin-top:6px}
+.score{font-family:'Baloo 2',sans-serif;font-size:22px;font-weight:800;background:var(--yellow);padding:4px 16px;border-radius:999px}
+.lvl{color:#fff;font-weight:700;padding:6px 14px;border-radius:999px}
+.res{text-align:center}
+.res .emoji{font-size:90px;animation:float 2s ease-in-out infinite}
+.res .num{font-family:'Baloo 2',sans-serif;font-size:72px;font-weight:800;color:var(--purple);line-height:1}
+.ans{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:18px}
+.ans span{padding:8px 12px;border-radius:14px;font-weight:700;color:#fff}
+.good{background:var(--mint)}.badr{background:var(--pink)}
+.confetti{position:fixed;top:-40px;font-size:26px;pointer-events:none;animation:fall linear forwards;z-index:9}
+@keyframes pop{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes wiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-3deg)}75%{transform:rotate(3deg)}}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+@media(max-width:560px){.opt{font-size:30px}.brand{font-size:20px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="deco">🍎</div><div class="brand">✖️ تحدي جدول الضرب ✖️</div><div class="deco">⭐</div><div class="deco">🚀</div>
+</header>
+
+<main>
+<!-- تسجيل: الاسم والصف فقط -->
+<section id="sStart" class="screen active">
+  <div class="card">
+    <div class="hero">
+      <svg class="mascot" viewBox="0 0 200 180" aria-hidden="true">
+        <polygon points="100,10 124,70 190,74 138,114 156,176 100,140 44,176 62,114 10,74 76,70" fill="#ffd23f" stroke="#ff8a3d" stroke-width="6" stroke-linejoin="round"/>
+        <circle cx="80" cy="95" r="8" fill="#2b2350"/><circle cx="120" cy="95" r="8" fill="#2b2350"/>
+        <circle cx="66" cy="112" r="6" fill="#ff5fa2" opacity=".6"/><circle cx="134" cy="112" r="6" fill="#ff5fa2" opacity=".6"/>
+        <path d="M84 116 Q100 134 116 116" stroke="#2b2350" stroke-width="6" fill="none" stroke-linecap="round"/>
+      </svg>
+      <div style="flex:1;min-width:220px">
+        <h1>أهلاً بكِ يا بطلة! 🦸‍♀️</h1>
+        <p class="muted">لديكِ 10 أسئلة في جدول الضرب، تدرّجت من السهل إلى المتقدم. أجيبي بسرعة ودقة لتحصلي على أعلى نتيجة!</p>
+      </div>
+    </div>
+    <div class="levels">
+      <div class="lv" style="background:#3ddc97"><div class="big">🌱 المستوى 1 · سهل</div><small>الأسئلة 1 – 3: جدول الضرب من 2 إلى 5 مع رسومات تساعدك</small></div>
+      <div class="lv" style="background:#ff8a3d"><div class="big">🔥 المستوى 2 · متوسط</div><small>الأسئلة 4 – 6: جدول الضرب من 6 إلى 9</small></div>
+      <div class="lv" style="background:#ff5fa2"><div class="big">👑 المستوى 3 · متقدم</div><small>الأسئلة 7 – 10: أعداد أكبر وأسئلة الناقص</small></div>
+    </div>
+    <div class="form-row">
+      <label for="nameIn"><b>الاسم الكامل:</b></label>
+      <input type="text" id="nameIn" maxlength="40" placeholder="مثال: نورة محمد">
+    </div>
+    <div class="form-row">
+      <label for="gradeIn"><b>الصف:</b></label>
+      <input type="text" id="gradeIn" maxlength="20" placeholder="مثال: 6/1">
+    </div>
+    <div style="margin-top:22px;text-align:center"><button class="btn" id="startBtn">ابدئي التحدي 🚀</button></div>
+    <div class="msg" id="startMsg"></div>
+  </div>
+</section>
+
+<!-- اللعب -->
+<section id="sGame" class="screen">
+  <div class="card">
+    <div class="topbar">
+      <span class="lvl" id="lvl"></span>
+      <span id="qno" style="font-weight:700"></span>
+      <span class="score" id="score">⭐ 0</span>
+    </div>
+    <div class="bar"><div id="bar"></div></div>
+    <div class="qtext" id="qtext"></div>
+    <div class="vis" id="vis"></div>
+    <div class="opts" id="opts"></div>
+    <div class="fb" id="fb"></div>
+    <div class="sync" id="sync"></div>
+  </div>
+</section>
+
+<!-- النتيجة -->
+<section id="sRes" class="screen">
+  <div class="card res">
+    <div class="emoji" id="resEmoji">🏆</div>
+    <h2 id="resTitle"></h2>
+    <div class="num" id="resNum"></div>
+    <p class="muted" id="resMsg"></p>
+    <div class="ans" id="resAns"></div>
+    <p class="sync" id="resSave"></p>
+  </div>
+</section>
+</main>
+
+<script>
+/* ===== الإعداد: الصقي هنا رابط تطبيق الويب من Apps Script ===== */
+const API_URL = "https://script.google.com/macros/s/AKfycbyq1vVWfkUk9rpof1VPDQhtCgYXcLkJz8hmNQ8THtFHscmRBHlE-qCGPt-DMLmTvb2_/exec";
+
+const QUESTIONS = [
+  {lvl:1,t:"2 × 3 = ?",  ans:6,  opts:[5,6,8,4],     vis:[2,3]},
+  {lvl:1,t:"3 × 5 = ?",  ans:15, opts:[18,15,12,20], vis:[3,5]},
+  {lvl:1,t:"5 × 4 = ?",  ans:20, opts:[25,30,20,15], vis:[5,4]},
+  {lvl:2,t:"6 × 7 = ?",  ans:42, opts:[36,48,42,40], vis:null},
+  {lvl:2,t:"8 × 4 = ?",  ans:32, opts:[24,32,28,36], vis:[4,8]},
+  {lvl:2,t:"9 × 6 = ?",  ans:54, opts:[56,54,45,63], vis:null},
+  {lvl:3,t:"7 × ? = 56", ans:8,  opts:[6,8,9,7],     vis:null},
+  {lvl:3,t:"12 × 11 = ?",ans:132,opts:[121,144,132,122], vis:null},
+  {lvl:3,t:"96 ÷ 8 = ?", ans:12, opts:[10,14,11,12], vis:null},
+  {lvl:3,t:"12 × 12 = ?",ans:144,opts:[132,144,124,156], vis:null}
+];
+const LEVELS = [
+  {name:"🌱 مستوى 1 · سهل", color:"#3ddc97"},
+  {name:"🔥 مستوى 2 · متوسط", color:"#ff8a3d"},
+  {name:"👑 مستوى 3 · متقدم", color:"#ff5fa2"}
+];
+const COLORS = ["#ff5fa2","#3aa8ff","#3ddc97","#ff8a3d"];
+const PRAISE = ["أحسنتِ! 🎉","ممتاز! ⭐","رائعة! 💖","بطلة! 🦸‍♀️"];
+
+const $ = id => document.getElementById(id);
+function el(tag, attrs = {}, kids = []) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === "class") e.className = v;
+    else if (k === "text") e.textContent = v;
+    else e.setAttribute(k, v);
+  }
+  for (const k of [].concat(kids)) if (k != null) e.append(k.nodeType ? k : document.createTextNode(String(k)));
+  return e;
+}
+function show(id) { document.querySelectorAll(".screen").forEach(s => s.classList.toggle("active", s.id === id)); }
+
+let state = null;
+const doneFlag = key => { try { return localStorage.getItem("done:" + key) === "1"; } catch (e) { return false; } };
+const setDoneFlag = key => { try { localStorage.setItem("done:" + key, "1"); } catch (e) {} };
+
+function keyFor(name, grade) {
+  const clean = s => s.trim().replace(/\s+/g, "_").replace(/[\/.#\[\]$]/g, "-");
+  return clean(grade) + "__" + clean(name);
+}
+
+/* يرسل البيانات بطلب بسيط (بدون تسجيل دخول) */
+function send(status) {
+  if (!state) return Promise.resolve(false);
+  if (!API_URL || API_URL.startsWith("PASTE_")) return Promise.resolve(false);
+  const payload = {
+    key: state.key, name: state.name, grade: state.grade, status,
+    score: state.score, total: QUESTIONS.length, answers: state.answers,
+    durationSec: Math.round((Date.now() - state.t0) / 1000)
+  };
+  return fetch(API_URL, {
+    method: "POST", mode: "no-cors",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify(payload)
+  }).then(() => true, () => false);
+}
+
+$("startBtn").onclick = () => {
+  const name = $("nameIn").value.trim();
+  const grade = $("gradeIn").value.trim();
+  if (!name || !grade) { $("startMsg").textContent = "اكتبي الاسم والصف أولاً 🙂"; return; }
+  if (API_URL.startsWith("PASTE_")) { $("startMsg").textContent = "الصفحة لم تُربط بجدول النتائج بعد."; return; }
+  const key = keyFor(name, grade);
+  if (doneFlag(key)) { $("startMsg").textContent = "لقد أنهيتِ هذا التحدي من قبل ✨"; return; }
+  $("startMsg").textContent = "";
+  state = { name, grade, key, i: 0, answers: [], score: 0, t0: Date.now() };
+  show("sGame");
+  renderQ();
+  send("playing").then(ok => $("sync").textContent = ok ? "✔ تم تسجيل دخولك" : "⚠ تعذّر الإرسال، تحققي من الإنترنت");
+};
+
+function visual([a, b]) {
+  const wrap = el("div", { class: "vis" });
+  for (let i = 0; i < a; i++) {
+    const row = el("div", { class: "row" });
+    for (let j = 0; j < b; j++) row.append(el("span", { class: "dot" }, ["🍎"]));
+    wrap.append(row);
+  }
+  return wrap;
+}
+
+function renderQ() {
+  const Q = QUESTIONS[state.i];
+  $("lvl").textContent = LEVELS[Q.lvl - 1].name;
+  $("lvl").style.background = LEVELS[Q.lvl - 1].color;
+  $("qno").textContent = `السؤال ${state.i + 1} / ${QUESTIONS.length}`;
+  $("bar").style.width = (state.i / QUESTIONS.length * 100) + "%";
+  $("score").textContent = `⭐ ${state.score}`;
+  $("qtext").textContent = Q.t;
+  const v = $("vis"); v.innerHTML = ""; if (Q.vis) v.append(visual(Q.vis));
+  const o = $("opts"); o.innerHTML = "";
+  Q.opts.forEach((val, idx) => {
+    const b = el("button", { class: "opt", style: `background:${COLORS[idx]}`, text: val });
+    b.onclick = () => choose(idx);
+    o.append(b);
+  });
+  $("fb").textContent = "";
+}
+
+function choose(idx) {
+  const Q = QUESTIONS[state.i];
+  const chosen = Q.opts[idx];
+  const ok = chosen === Q.ans;
+  const rightIdx = Q.opts.indexOf(Q.ans);
+  [...$("opts").children].forEach((b, j) => {
+    b.disabled = true;
+    if (j === rightIdx) b.classList.add("right");
+    else if (j === idx) b.classList.add("wrong");
+  });
+  state.answers.push({ q: state.i + 1, t: Q.t, chosen, correct: Q.ans, ok });
+  if (ok) state.score++;
+  $("score").textContent = `⭐ ${state.score}`;
+  $("fb").style.color = ok ? "#16a573" : "#e0245e";
+  $("fb").textContent = ok ? PRAISE[state.i % PRAISE.length] : `الإجابة الصحيحة: ${Q.ans} 📚`;
+  send("playing");
+  setTimeout(() => {
+    state.i++;
+    if (state.i < QUESTIONS.length) renderQ(); else finish();
+  }, 1200);
+}
+
+async function finish() {
+  setDoneFlag(state.key);
+  await send("done");
+  show("sRes");
+  const s = state.score, total = QUESTIONS.length;
+  const tiers = [
+    [9, "🏆", "أسطورة الضرب!", "نتيجة مذهلة، أنتِ جاهزة للتحديات الكبرى!"],
+    [7, "🌟", "رائعة جداً!", "معرفتك بالجدول قوية، واصلي التميز."],
+    [5, "💪", "أحسنتِ!", "أنتِ على الطريق الصحيح، راجعي الأخطاء وستتحسنين."],
+    [0, "📚", "لا بأس!", "راجعي جدول الضرب وستصلين للقمة في المرة القادمة."]
+  ];
+  const tier = tiers.find(t => s >= t[0]);
+  $("resEmoji").textContent = tier[1];
+  $("resTitle").textContent = tier[2];
+  $("resNum").textContent = `${s} / ${total}`;
+  $("resMsg").textContent = tier[3];
+  $("resAns").innerHTML = "";
+  state.answers.forEach(a => $("resAns").append(
+    el("span", { class: a.ok ? "good" : "badr", text: `${a.q}: ${a.ok ? "✓" : "✗"}` })));
+  $("resSave").textContent = "تم إرسال نتيجتك إلى المعلمة ✔";
+  if (s >= 7) confetti();
+}
+
+function confetti() {
+  const pieces = ["🎉","⭐","🍎","🎊","💖"];
+  for (let i = 0; i < 40; i++) {
+    const c = el("div", { class: "confetti", text: pieces[i % pieces.length] });
+    c.style.left = Math.random() * 100 + "vw";
+    c.style.animationDuration = (2 + Math.random() * 2) + "s";
+    c.style.animationDelay = Math.random() * 0.8 + "s";
+    document.body.append(c);
+    setTimeout(() => c.remove(), 5000);
+  }
+}
+
+show("sStart");
+</script>
+</body>
+</html>
